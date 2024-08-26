@@ -1,0 +1,4 @@
+Before using this tool, ensure you have the following:
+
+- Python 3.x installed on your system.
+- The `scapy` library for packet capture and analysis.
