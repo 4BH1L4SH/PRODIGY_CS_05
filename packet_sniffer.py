@@ -1,29 +1,22 @@
 from scapy.all import sniff
-from scapy.layers.inet import IP, TCP, UDP, ICMP
+from scapy.layers.inet import IP, TCP, UDP
 
 def packet_callback(packet):
-    # Check if the packet has an IP layer
     if IP in packet:
-        ip_src = packet[IP].src
-        ip_dst = packet[IP].dst
-        protocol = packet[IP].proto
-        payload = packet[IP].payload
+        ip_layer = packet[IP]
+        print(f"Source IP: {ip_layer.src} -> Destination IP: {ip_layer.dst}")
+        if TCP in packet:
+            tcp_layer = packet[TCP]
+            print(f"Protocol: TCP | Source Port: {tcp_layer.sport} -> Destination Port: {tcp_layer.dport}")
+        elif UDP in packet:
+            udp_layer = packet[UDP]
+            print(f"Protocol: UDP | Source Port: {udp_layer.sport} -> Destination Port: {udp_layer.dport}")
+        print(f"Payload: {bytes(packet[IP].payload).decode(errors='ignore')}")
+        print("="*50)
 
-        print(f"Source IP: {ip_src}")
-        print(f"Destination IP: {ip_dst}")
+def main():
+    print("Starting packet sniffer...")
+    sniff(filter="ip", prn=packet_callback, store=0)
 
-        # Identify the protocol
-        if protocol == 6:
-            print("Protocol: TCP")
-        elif protocol == 17:
-            print("Protocol: UDP")
-        elif protocol == 1:
-            print("Protocol: ICMP")
-        else:
-            print(f"Protocol: {protocol}")
-
-        print(f"Payload: {payload}")
-        print("-" * 50)
-
-# Start sniffing
-sniff(prn=packet_callback, filter="ip", store=0)
+if __name__ == "__main__":
+    main()
