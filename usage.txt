@@ -1,0 +1,5 @@
+clone the reposition:
+
+git clone https://github.com/4BH1L4SH/PRODIGY_CS_05.git
+
+cd PRODIGY_CS_05
